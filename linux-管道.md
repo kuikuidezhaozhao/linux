@@ -1,0 +1,36 @@
+# 管道
+## 进程管道
+- 用法：command1 | command2 | command3 |..
+- eg:
+  - apt list | grep vim
+  - dpkg -l //查找安装的软件
+  - dpkg -l | grep vim
+  - manpages-zh //man汉化
+  - sort //排序
+    - sort -t":" -k3 -n /etc/passwd  //以：分割，将第三列按字数升序
+    - sort -t":" -k3 -n -r /etc/passwd  //以：分割，将第三列按字数逆序
+    - -t：指定字段分割符--field-separator
+    - -k：指定列
+    - -n：按数值
+  - ps aux --sort=-%cpu | head -6 | grep '%CPU'
+  - ps aux --sort=-%cpu | head -6 | grep -v '%CPU'
+    - grep -v //反向查找，不含有的
+  - 统计当前/etc/passwd中用户使用的shell类型（思路：取出第七列（shell）|排序（把相同归类）| 去重）
+    - awk -F: '{print $7}' /etc/passwd                    //取出第7列
+    - awk -F: '{print $7}' /etc/passwd | sort             //排序
+    - awk -F: '{print $7}' /etc/passwd | sort | uniq      //去重
+    - awk -F: '{print $7}' /etc/passwd | sort | uniq -c   //统计
+      - -F:  指定字段分割符
+      - $7   第七个字段
+  - 统计网站的访问情况 top20（思路：打印所有访问的连接 | 过滤访问网站的连接 | 打印用户的IP | 排序 | 去重）
+    - # apt-get install httpd
+    - # systemctl start httpd
+    - # systemctl stop firewalld 
+    - ss -an | grep :80 | awk -F":" '{print $8}' | sort | uniq -c | sort -k1 -rn | head -n 20 
+  - 打印当前的所有IP
+    - # ip addr |grep 'inet '|awk '{print $2}'|awk -F"/" '{print $1}'
+- tee管道
+  - ip addr |grep 'inet ' |tee ip.txt |awk -F"/" '{print $1}' |awk '{print $2}'
+  -  ip addr |grep 'inet ' |tee -a ip.txt |awk -F"/" '{print $1}' |awk '{print $2}'
+  - date >date.txt
+  - date |tee date.txt
