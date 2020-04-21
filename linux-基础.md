@@ -1,0 +1,63 @@
+## 文件查找
+- grep: 文件内容过滤
+- find：文件
+- 查找，针对文件名
+### 命令文件
+- which vim
+- which ls
+- PATH   //aag环境变量
+  - echo $PATH
+  - /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+### 任意文件
+- locate
+  - updatedb
+  - locate 文件名
+- find
+  - find [options][path...][expressiion][action]
+  - 按文件名查找
+    - find / -name "文件名"
+    - find /etc /home -name "文件名"
+    - find /etc /home -iname "文件名"    //忽略文件名的大小写
+  - 按文件大小找
+    - find /etc -size +5M                 //大于5M
+    - find /etc -size  5M                 //等于5M
+    - find /etc -size -5M                 //小于5M
+    - find /etc -size +5M  -ls            //-ls找到的处理动作
+  - 指定查找的目录深度
+    - find / -maxdepth 3 -a -name "文件名"
+  - 按时间找（atime、mtime、ctime） 
+    - find /etc -mtime +5          //修改时间超过5天
+    - find /etc -mtime 5           //修改时间等于5天
+    - find /etc -mtime -5          //修改时间5天以内
+  - 按文件属主、属组找
+    - find /home -user jack     //属主是jack的文件
+    - find /home -group hr      //属组是hr的文件
+    - find /home -nouser 
+    - find /home -nogroup
+  - 按文件类型
+    - find /dev -type f        //f普通
+    - find /dev -type d        //d目录
+    - find /dev -type l        //l链接
+    - find /dev -type b        //b块设备
+    - find /dev -type c        //c字符设备
+    - find /dev -type s        //s套接字
+    - find /dev -type p        //p管道文件
+  - 按权限
+    - find . -perm 644      //当前目录权限是644的文件
+    - find . -perm -644     //当前目录包含权限644的文件
+### 找到后的处理动作
+- -priint
+- -ls
+- -delete
+- -exec      //后面跟自定义shell
+- -ok
+- eg：
+  - find /etc -name "文件名" -exec rm -rf {}\;
+  - find /etc -name "文件名" | xargs rm -rf
+  - find /etc -name "文件名" | xargs -I {} cp -rf {} /var/tmp
+- 只复制目录不复制目录下的文件
+  - find /etc -type d -exec mkdir /tmp/{} \;
+- 目录777文件666
+  - chmod -R a=rwX /var/tmp/etc/
+  - find /var/tmp/etc/ -typed d -exec chmod 777 {} \+    //目录
+  - find /var/tmp/etc/ ! -typed d -exec chmod 666 {} \+  //非目录
