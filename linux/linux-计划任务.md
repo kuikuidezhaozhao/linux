@@ -1,0 +1,43 @@
+# 计划任务
+- Schedule one-time tasks with at.  一次性调度执行at
+- Schedule recurring jobs with cron.循环调度执行cron
+- Schedule recurring systrm jobs.
+- 所有计划任务执行中的输出都会以邮件的方式发送给指定的用户，除非是重定向
+## 一次调度执行at
+- apt-get install at
+- systemctl start std
+- systemctl enable std
+- 语法格式：
+  - at<TIMESPEC>
+    - now +5min
+    - teatime tomorrow (teatime is 16:00)
+    - noon +4 days
+    - 5pm august 3 2018
+- 例子1
+  -  at now +1min
+  - at> ls
+  - at> <EOT>
+- 例子2
+  -  vim at.jobs
+    - useradd u99
+    - uderadd u00
+    - touch / \`date+%F\`.txt               //  \`为转义符,因为我使用的是markdown在编写，所以使用了转义字符，大家在复现的时候不用再linux系统上面打出\,本文章的转义字符作相同处理
+  - at now +1min < at.jobs                 //>双斜杠后面的>只是用来为了使markdown语法平衡作用，以下雷同
+- 例子3
+  - 1、准备sudo用户 
+    -  user kuibaobao -G sudo
+    -  visudo
+    - 把%sudo  ALL=(ALL:ALL)  ALL   改成： %sudo ALL=(ALL:ALL)    NOPASSWAD:ALL        //这样改了以后这个用户组sudo的时候不需要密码
+    -  su -kuibaobao
+    -  sudo useradd kuibaobao2                //jack用户再使用sudo的时候不用在输入sudo的密码，可以直接创建yy用户
+  - 2、以sudo用户kuibaobao创建at任务
+    -  vim kuibaobao.at
+      - sudo useradd u200
+      - sudo useradd u300
+      - sudo touch /home/\`date+%F\`_jack.txt
+    -  at now +1min<kuibaobao.at                          //>
+  - 注：有的linux版本sudo执行的时候需要考虑tty问题
+    - 解决办法为：
+    -  visudo
+    - 把Defaults !visblepw注释掉，注释就是在前面加上#
+
